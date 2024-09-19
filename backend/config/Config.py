@@ -42,6 +42,72 @@ class Configs(BaseSettings):
     LOGGER_ROTATION: str = "10 MB"  # 日志分片: 按 时间段/文件大小 切分日志. 例如 ["500 MB" | "12:00" | "1 week"]
     LOGGER_RETENTION: str = "7 days"  # 日志保留的时间: 超出将删除最早的日志. 例如 ["1 days"]
 
+    """
+    数据库配置
+    """
+    # DATABASE_URI: str = "sqlite+aiosqlite:///./sql_app.db?check_same_thread=False"  # Sqlite(异步)
+    # DATABASE_URI: str = Field(..., env="MYSQL_DATABASE_URI")  # MySQL(异步)
+    DATABASE_URI: str = "mysql+aiomysql://root:123456@localhost:3306/zerorunner"
+    # DATABASE_URI: str = "postgresql+asyncpg://postgres:123456@localhost:5432/postgres"  # PostgreSQL(异步)
+    DATABASE_ECHO: bool = False  # 是否打印数据库日志 (可看到创建表、表数据增删改查的信息)
+    DATABASE_POOL_SIZE: int = 10    # 队列池个数
+    MAX_OVERFLOW: int = 10       # 队列池最大溢出个数
+    POOL_PRE_PING:bool = True       # 将启用连接池“预ping”功能，该功能在每次签出时测试连接的活跃度
+    POOL_RECYCLE:int = 7200     # 2个小时回收线程
+
+
+    # redis
+    # REDIS_URI: str = Field(..., env="jdbc:redis://localhost:6379/0")  # redis
+    REDIS_URI: str = "redis://localhost:6379/0"
+
+
+    # api配置
+    API_PREFIX: str = "/api"  # 接口前缀
+
+
+    # 常量
+    # 公共
+    DEFAULT_PAGE = 1
+    DEFAULT_PER_PAGE = 10
+    DEFAULT_FAIL = -1
+
+    # Cache Time
+    CACHE_FIVE_SECONDS = 5
+    CACHE_MINUTE = 60
+    CACHE_THREE_MINUTE = 60 * 3
+    CACHE_FIVE_MINUTE = 60 * 5
+    CACHE_TEN_MINUTE = 60 * 10
+    CACHE_HALF_HOUR = 60 * 30
+    CACHE_HOUR = 60 * 60
+    CACHE_THREE_HOUR = 60 * 60 * 3
+    CACHE_TWELVE_HOUR = 60 * 60 * 12
+    CACHE_DAY = 60 * 60 * 24
+    CACHE_WEEK = 60 * 60 * 24 * 7
+    CACHE_MONTH = 60 * 60 * 24 * 30
+
+    # Cache
+    TEST_USER_INFO = 'fastrun:user_token:{0}'  # 用户token缓存
+    TEST_EXECUTE_SET = 'fastrun:test_execute_set:case:{}'  # 用例执行集合
+    TEST_EXECUTE_STATS = 'fastrun:test_execute_set:stats:{}'  # 用例执行统计
+    TEST_EXECUTE_TASK = 'fastrun:test_execute_set:task:{}'  # 运行任务数
+    TEST_EXECUTE_PARAMETER = 'fastrun:test_execute_set:extract_parameter:{}'  # 变量
+    DATA_STRUCTURE_CASE_UPDATE = 'fastrun:data_structure:user:{}'  # 数据构造用户变更的接口信息
+    TEST_USER_LOGIN_TIME = 'fastrun:user_login_time:{}'  # 数据构造用户变更的接口信息
+
+    # 性能
+    PREFORMANCE_RUN_STATUS = 'performance_test:status'
+    PREFORMANCE_FREE = 0
+    PREFORMANCE_INIT = 10
+    PREFORMANCE_BUSY = 20
+    PREFORMANCE_ABORT = 30
+
+    PREFORMANCE_CODE = 'code'
+    PREFORMANCE_SIGN_CODE = 'sign_code'
+
+    THREAD_MAXMUM = 100
+    RUN_NUMBER_MAXMUM = 1000000
+    DEBUG_MAXMUM = 100
+
 
 
 

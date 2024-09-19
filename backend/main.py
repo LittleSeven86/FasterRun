@@ -2,8 +2,11 @@ from fastapi import FastAPI
 
 import uvicorn
 import click
+from loguru import logger
 
 from config.Config import Configs, config
+from init.init_logger import init_logger
+from init.init_router import init_router
 
 app = FastAPI(
     title="FastRun",
@@ -18,7 +21,11 @@ async def init_app() -> None:
     注册中心
     :return:
     """
-    pass
+    init_router(app)
+    init_logger()
+
+    logger.info("项目初始化成功")
+
 
 
 @app.on_event("startup")

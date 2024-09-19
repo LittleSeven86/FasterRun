@@ -1,10 +1,5 @@
-# coding=utf-8
-# !/usr/bin/env python
-# -*- coding:utf-8 -*-
-# @FileName  :serialize.py
-# @Time      :2024/9/11 21:48
-# @Author    :XiaoQi
-
+# -*- coding: utf-8 -*-
+# @author: xiaobai
 import typing
 from datetime import datetime
 from json import JSONEncoder
@@ -12,10 +7,9 @@ from json import JSONEncoder
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import Select, select, func, literal_column, Row
 from sqlalchemy.orm import noload, DeclarativeMeta
-from sqlalchemy.testing.config import options
 
-# 对 Select 或者Query的结果进行范型转换
-T = typing.TypeVar("T",Select,"Query[Any]")
+T = typing.TypeVar("T", Select, "Query[Any]")
+
 
 def count_query(query: Select) -> Select:
     """
@@ -23,54 +17,69 @@ def count_query(query: Select) -> Select:
     :param query: sql
     :return:
     """
-    count_subquery = typing.cast(
-        typing.Any,query.order_by(None)).options(noload("*")).subquery()
-    return select(
-        func.count(literal_column("*"))).select_from(count_subquery)
+    count_subquery = typing.cast(typing.Any, query.order_by(None)).options(noload("*")).subquery()
+    return select(func.count(literal_column("*"))).select_from(count_subquery)
 
-def pagenate_query(query:T,page:int,page_size:int) -> T:
+
+def paginate_query(query: T, page: int, page_size: int) -> T:
+    """
+    获取分页sql
+    :param query:
+    :param page: 页数
+    :param page_size: 每页大小
+    :return:
+    """
     return query.limit(page_size).offset(page_size * (page - 1))
 
 
+def len_or_none(obj: typing.Any) -> typing.Optional[int]:
+    """有数据返回长度 没数据返回None"""
+    try:
+        return len(obj)
+    except TypeError:
+        return None
+
+
+def unwrap_scalars(items: typing.Union[typing.Sequence[Row], Row]) -> typing.Union[
+    typing.List[typing.Dict[typing.Text, typing.Any]], typing.Dict[str, typing.Any]]:
+    """
+    数据库Row对象数据序列化为字典
+    :param items: 数据返回数据 [Row(...)]
+    :return:
+    """
+    if isinstance(items, typing.Iterable) and not isinstance(items, Row):
+        return [default_serialize(item) for item in items]
+    return default_serialize(items)
+
+
+class MyJsonDecode(JSONEncoder):
+    """自定义json解析器"""
+
+    def default(self, obj):
+        try:
+            return super().default(obj)
+        except:
+            return default_serialize(obj)
+
 
 def default_serialize(obj):
-
-    def serialize_int(value):
-        return str(value) if len(str(value)) > 15 else value
-
-    def serialize_dict(d):
-        return {key: default_serialize(value) for key, value in d.items()}
-
-    def serialize_list(l):
-        return [default_serialize(i) for i in l]
-
-    def serialize_datetime(dt):
-        return dt.strftime("%Y-%m-%d %H:%M:%S")
-
-    def serialize_row(row):
-        data = dict(zip(row._fields, row._data))
-        return serialize_dict(data)
-
-    def serialize_declarative(obj):
-        return {c.name: default_serialize(getattr(obj, c.name)) for c in obj.__table__.columns}
-
-    type_serializers = {
-        int: serialize_int,
-        dict: serialize_dict,
-        list: serialize_list,
-        datetime: serialize_datetime,
-        Row: serialize_row,
-        DeclarativeMeta: serialize_declarative,
-        typing.Callable: repr
-    }
-
-    for data_type, serializer in type_serializers.items():
-        if isinstance(obj, data_type):
-            return serializer(obj)
-
+    """默认序序列化"""
     try:
-        # 处理其他所有无法识别的数据类型
+        if isinstance(obj, int) and len(str(obj)) > 15:
+            return str(obj)
+        if isinstance(obj, dict):
+            return {key: default_serialize(value) for key, value in obj.items()}
+        if isinstance(obj, list):
+            return [default_serialize(i) for i in obj]
+        if isinstance(obj, datetime):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        if isinstance(obj, Row):
+            data = dict(zip(obj._fields, obj._data))
+            return {key: default_serialize(value) for key, value in data.items()}
+        if hasattr(obj, "__class__") and isinstance(obj.__class__, DeclarativeMeta):
+            return {c.name: default_serialize(getattr(obj, c.name)) for c in obj.__table__.columns}
+        if isinstance(obj, typing.Callable):
+            return repr(obj)
         return jsonable_encoder(obj)
-    except TypeError:
-        # 在无法序列化对象时返回其字符串表示形式
+    except TypeError as err:
         return repr(obj)
