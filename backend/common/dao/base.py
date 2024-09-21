@@ -14,6 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import as_declarative
 from sqlalchemy.orm import mapped_column
 
+from common.utils.current_user import current_user
 from db.session import provide_async_session
 from common.exception.BaseException import AccessTokenFail
 from config.Config import config
@@ -129,34 +130,32 @@ class Base:
 
     @classmethod
     async def handle_params(cls, params: typing.Any) -> typing.Any:
-        pass
-        # """
-        # :param params: 参数列表
-        # :return: 过滤好的参数
-        # """
-        # if isinstance(params, dict):
-        #     params = {key: value for key, value in params.items() if hasattr(cls, key)}
-        #     updated_by = params.get("updated_by", None)
-        #     created_by = params.get("created_by", None)
-        #     params['trace_id'] = g.trace_id
-        #     try:
-        #         # todo
-        #         current_user_info = await current_user()
-        #     except AccessTokenFail as err:
-        #         current_user_info = None
-        #     if current_user_info:
-        #         current_user_id = current_user_info.get("id", None)
-        #         params["updated_by"] = current_user_id
-        #         if not params.get("id", None):
-        #             params["created_by"] = current_user_id
-        #     else:
-        #         if not updated_by:
-        #             params["updated_by"] = 0
-        #         if not created_by:
-        #             params["created_by"] = 0
-        # elif isinstance(params, list):
-        #     params = [await cls.handle_params(p) for p in params]
-        # return params
+        """
+        :param params: 参数列表
+        :return: 过滤好的参数
+        """
+        if isinstance(params, dict):
+            params = {key: value for key, value in params.items() if hasattr(cls, key)}
+            updated_by = params.get("updated_by", None)
+            created_by = params.get("created_by", None)
+            params['trace_id'] = g.trace_id
+            try:
+                current_user_info = await current_user()
+            except AccessTokenFail as err:
+                current_user_info = None
+            if current_user_info:
+                current_user_id = current_user_info.get("id", None)
+                params["updated_by"] = current_user_id
+                if not params.get("id", None):
+                    params["created_by"] = current_user_id
+            else:
+                if not updated_by:
+                    params["updated_by"] = 0
+                if not created_by:
+                    params["created_by"] = 0
+        elif isinstance(params, list):
+            params = [await cls.handle_params(p) for p in params]
+        return params
 
     @classmethod
     async def delete(cls, id: typing.Union[int, str], _hard: bool = False) -> int:

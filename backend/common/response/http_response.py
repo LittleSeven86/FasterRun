@@ -47,9 +47,11 @@ def parter_success(
     """
     if data is None:
         data = {}
+
     success = True if code == CodeEnum.PARTNER_CODE_OK.code else False
-    content = default_serialize(success)
-    return HttpResponse(content=content, status_code=http_code, headers=headers)
+    content = dict(code=code, msg=msg, data=data, success=success, trace_id=g.trace_id)
+    content = default_serialize(content)
+    return HttpResponse(status_code=http_code, content=content, headers=headers)
 
 def response_success_200(data:typing.Any,msg:str="Success") -> typing.Dict:
     logger.info(msg)

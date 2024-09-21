@@ -7,7 +7,7 @@
 
 from sqlalchemy import Integer, String, select
 from sqlalchemy.orm import aliased, mapped_column
-from apps.systems.dao.RoleDao import User
+from apps.systems.dao.userDao import User
 from apps.project.model.ProjectInfoModel import ProjectQuery
 
 

@@ -1,14 +1,15 @@
 # coding=utf-8
 # !/usr/bin/env python
 # -*- coding:utf-8 -*-
-# @FileName  :RoleDao.py
+# @FileName  :userDao.py
 # @Time      :2024/9/12 21:47
 # @Author    :XiaoQi
 import typing
 
-from sqlalchemy import String, Text, JSON, Integer, select
+from sqlalchemy import String, Text, JSON, Integer, select, Index, DateTime
 from sqlalchemy.orm import mapped_column, aliased
 
+from apps.systems.model.UserModel import UserLoginRecordQuery
 from common.dao.base import Base
 from apps.systems.model import RoleModel
 
@@ -60,3 +61,39 @@ class User(Base):
     async def get_user_by_nickname(cls, nickname: str):
         stmt = select(*cls.get_table_columns()).where(cls.nickname == nickname, cls.enabled_flag == 1)
         return await cls.get_result(stmt, True)
+
+class UserLoginRecord(Base):
+    __tablename__ = "user_login_record"
+    __table_args__ = (
+        Index('idx_login_record_code_logintime', 'code', 'login_time'),
+    )
+
+    token = mapped_column(String(40), index=True, comment='登陆token')
+    code = mapped_column(String(64), index=True, comment='账号')
+    user_id = mapped_column(Integer, comment='用户id')
+    user_name = mapped_column(String(50), comment='用户名称')
+    logout_type = mapped_column(String(50), comment='退出类型')
+    login_type = mapped_column(String(50), index=True, comment='登陆方式   扫码  账号密码等')
+    login_time = mapped_column(DateTime, index=True, comment='登陆时间')
+    logout_time = mapped_column(DateTime, comment='退出时间')
+    login_ip = mapped_column(String(30), index=True, comment='登录IP')
+    ret_msg = mapped_column(String(255), comment='返回信息')
+    ret_code = mapped_column(String(9), index=True, comment='是否登陆成功  返回状态码  0成功')
+    address = mapped_column(String(255), comment='地址')
+    source_type = mapped_column(String(255), comment='来源')
+
+    @classmethod
+    async def get_list(cls, params: UserLoginRecordQuery):
+        q = [cls.enabled_flag == 1]
+        if params.token:
+            q.append(cls.token.like('%{}%'.format(params.token)))
+        if params.code:
+            q.append(cls.code.like('%{}%'.format(params.code)))
+        if params.user_name:
+            q.append(cls.user_name.like('%{}%'.format(params.user_name)))
+        u = aliased(User)
+        stmt = select(cls) \
+            .where(*q) \
+            .outerjoin(u, u.id == cls.created_by) \
+            .order_by(cls.id.desc())
+        return await cls.pagination(stmt)
