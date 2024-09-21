@@ -9,16 +9,14 @@ from pydantic import BaseModel,validator
 from common.constants.Constants import Constants
 
 
-class BaseModel(BaseModel):
+class BaseSchema(BaseModel):
+    def dict(self, *args, **kwargs):
+        if "exclude_none" not in kwargs:
+            kwargs["exclude_none"] = True
+        return super(BaseSchema, self).dict(*args, **kwargs)
 
-    def dict(self,*args,**kwargs):
-        # 当调用 dict() 方法时，默认会排除值为 None 的字段
-        if Constants.EXCLUDE_NONE not in kwargs:
-            kwargs[Constants.EXCLUDE_NONE] = True
-        return super(BaseModel,self).dict(*args,**kwargs)
-
-    @validator("*",pre=True)
-    def blank_strings(cls, values):
-        if values is None:
+    @validator('*', pre=True)
+    def blank_strings(cls, v):
+        if v == "":
             return None
-        return values
+        return v

@@ -8,6 +8,8 @@
 import typing
 
 from pydantic import Field
+from sqlalchemy import Index, String, Integer, DateTime
+from sqlalchemy.orm import mapped_column
 
 from common.model.BaseModel import BaseModel
 from common.utils.generate_rsa_key import decrypt_rsa_password
@@ -96,3 +98,17 @@ class UserTokenIn(BaseModel):
     login_ip: str = Field(None, description='登录ip')
     remarks: str = Field(None, description='备注')
 
+class UserLoginRecordQuery(BaseModel):
+    token: str = Field(None, description='token')
+    code: str = Field(None, description="账号")
+    user_id: int = Field(None, description="用户id")
+    user_name: str = Field(None, description="用户名称")
+    logout_type: str = Field(None, description="登出类型")
+    login_type: str = Field(None, description="登录类型")
+    login_time: str = Field(None, description="登录时间")
+    logout_time: str = Field(None, description="登出时间")
+    login_ip: str = Field(None, description="登录ip")
+    ret_msg: str = Field(None, description="返回信息")
+    ret_code: str = Field(None, description="返回code")
+    address: str = Field(None, description="地址")
+    source_type: str = Field(None, description="来源")

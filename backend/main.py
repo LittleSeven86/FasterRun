@@ -1,10 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 
 import uvicorn
 import click
 from loguru import logger
 
 from config.Config import Configs, config
+from config.dependencies import login_verification
 from init.init_logger import init_logger
 from init.init_router import init_router
 
@@ -12,7 +13,8 @@ app = FastAPI(
     title="FastRun",
     description=config.PROJECT_DESC,
     version=config.PROJECT_VERSION,
-    dependencies=[]
+    dependencies=[Depends(login_verification)],
+    debug=True,
 )
 
 
