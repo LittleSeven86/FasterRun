@@ -1,7 +1,7 @@
 # coding=utf-8
 # !/usr/bin/env python
 # -*- coding:utf-8 -*-
-# @FileName  :user_controller.py
+# @FileName  :userController.py
 # @Time      :2024/9/15 14:39
 # @Author    :XiaoQi
 from http.client import HTTPException
@@ -14,7 +14,7 @@ from apps.systems.model.UserModel import UserIn
 from common.enum.code_enum import CodeEnum
 from common.response.http_response import parter_success
 from apps.systems.model.UserModel import User, UserLogin, UserQuery, UserResetPwd, UserDelete
-from apps.systems.service.UsersService import UsersService
+from apps.systems.service.userService import UsersService
 from common.utils.local import g
 
 router = APIRouter()
