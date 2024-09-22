@@ -6,6 +6,7 @@
 # @Author    :XiaoQi
 from fastapi import Request, Security
 from fastapi.security import APIKeyHeader
+from sqlalchemy.dialects.postgresql.psycopg import logger
 
 from db.redis import redis_pool
 from common.exception.BaseException import AccessTokenFail
