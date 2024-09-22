@@ -11,7 +11,6 @@ from sqlalchemy.orm import mapped_column, aliased
 
 from apps.systems.model.UserModel import UserLoginRecordQuery
 from common.dao.base import Base
-from apps.systems.model import RoleModel
 
 
 class User(Base):
@@ -30,7 +29,7 @@ class User(Base):
     tags = mapped_column(JSON, comment='标签')
 
     @classmethod
-    async def get_list(cls, params: RoleModel):
+    async def get_list(cls, params):
         q = [cls.enabled_flag == 1]
         # todo 将添加条件的语法抽为一层公共方法
         if params.username:

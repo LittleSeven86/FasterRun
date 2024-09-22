@@ -1,7 +1,7 @@
 # coding=utf-8
 # !/usr/bin/env python
 # -*- coding:utf-8 -*-
-# @FileName  :UsersService.py
+# @FileName  :userService.py
 # @Time      :2024/9/13 21:19
 # @Author    :XiaoQi
 import traceback
@@ -17,7 +17,9 @@ from loguru import logger
 from starlette.status import HTTP_401_UNAUTHORIZED
 from watchfiles import awatch
 
+from apps.systems.dao.menuDao import Menu
 from apps.systems.model.UserModel import UserTokenIn, UserLoginRecordIn, UserLogin, UserQuery, UserResetPwd, UserDelete
+from apps.systems.service.menuService import MenuService
 from common.enum.code_enum import CodeEnum
 from apps.systems.dao.userDao import User, UserLoginRecord
 from apps.systems.model.UserModel import UserIn
@@ -258,3 +260,29 @@ class UsersService:
             'username': user_info.get('username', None)
         }
         return user_info
+
+    @staticmethod
+    async def get_menu_by_token(token: str) -> typing.List[typing.Dict[typing.Text, typing.Any]]:
+        """菜单权限"""
+        current_user_info = await current_user(token)
+        if not current_user_info:
+            return []
+        user_info = await User.get(current_user_info.get("id"))
+        if not user_info or not user_info.roles:
+            return []
+        menu_ids = []
+        if user_info.user_type == 10:
+            all_menu = await Menu.get_menu_all()
+            menu_ids += [i["id"] for i in all_menu]
+        else:
+            roles = await Roles.get_roles_by_ids(user_info.roles if user_info.roles else [])
+            for i in roles:
+                menu_ids += list(map(int, i["menus"].split(',')))
+            if not menu_ids:
+                return []
+            parent_menus = await Menu.get_parent_id_by_ids(list(set(menu_ids)))
+            # 前端角色报错只保存子节点数据，所有这里要做处理，把父级菜单也返回给前端
+            menu_ids += [i["parent_id"] for i in parent_menus]
+            all_menu = await Menu.get_menu_by_ids(list(set(menu_ids)))
+        parent_menu = [menu for menu in all_menu if menu['parent_id'] == 0]
+        return MenuService.menu_assembly(parent_menu, all_menu) if menu_ids else []
