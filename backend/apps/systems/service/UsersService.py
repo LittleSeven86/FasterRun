@@ -8,6 +8,7 @@ import traceback
 import typing
 import uuid
 from datetime import datetime
+from http.client import responses
 from urllib import request
 
 import bcrypt
@@ -15,12 +16,13 @@ from fastapi import HTTPException
 from loguru import logger
 from starlette.status import HTTP_401_UNAUTHORIZED
 
-from apps.systems.model.UserModel import UserTokenIn, UserLoginRecordIn, UserLogin
+from apps.systems.model.UserModel import UserTokenIn, UserLoginRecordIn, UserLogin, UserQuery, UserResetPwd
 from common.enum.code_enum import CodeEnum
 from apps.systems.dao.userDao import User, UserLoginRecord
 from apps.systems.model.RoleModel import UserIn
 from common.serialize.serialize import default_serialize
-from common.utils.generate_rsa_key import decrypt_rsa_password
+from common.utils.current_user import current_user
+from common.utils.generate_rsa_key import decrypt_rsa_password, encrypt_rsa_password
 from common.utils.local import g
 from config.Config import config
 from db.redis import redis_pool
@@ -153,4 +155,76 @@ class UsersService:
             tags=user_info.tags,
             remarks=user_info.remarks,
             login_time=token_info.get("login_time"),
+        )
+
+    @staticmethod
+    async def list(params:UserQuery) -> typing.Dict[typing.Text, typing.Any]:
+        """
+        获取用户列表
+        :param params:
+        :return:
+        """
+        data = await User.get_list(params)
+        for row in data.get("rows"):
+            row["roles"] = row.get("roles", [])
+            row["tags"] = row.get("tags", [])
+        return data
+
+
+    @staticmethod
+    async def save_or_update(params:UserIn) -> typing.Dict[typing.Text, typing.Any]:
+        """
+        用户保存或者更新方法
+        :param params:
+        :return:
+        """
+        exist_user = await User.get_user_by_nickname(params.nickname)
+        if not params.id:
+            if exist_user:
+                raise ValueError("用户昵称已存在")
+        else:
+            user_info = await User.get(params.id,to_dict=True)
+            if user_info["nickname"] != params.nickname:
+                if exist_user:
+                    raise ValueError("用户昵称已存在")
+        result = await User.create_or_update(params.dict())
+        user_info = await User.get(result.get("id"))
+        logger.info(user_info)
+        current_user_info = await current_user()
+        if current_user_info.get("id") == params.id:
+            token_user_info = UserTokenIn(
+                id=params.id,
+                token=current_user_info.get("token"),
+                avatar=user_info.get("avatar"),
+                username = user_info.username,
+                nickname=user_info.nickname,
+                roles=user_info.roles,
+                tags=user_info.tags,
+                login_time=current_user_info.get("login_time"),
+                remarks=user_info.remarks
+            )
+            await redis_pool.redis.set(config.TEST_USER_INFO.format(g.token), token_user_info.dict(), config.CACHE_DAY)
+            return user_info
+
+    @staticmethod
+    async def reset_password(params: UserResetPwd) :
+        """
+        修改密码
+        :param params:
+        :return:
+        """
+        if params.new_pwd != params.re_new_pwd:
+            raise ValueError(CodeEnum.PASSWORD_TWICE_IS_NOT_AGREEMENT.msg)
+        user_info = await User.get(params.id)
+        pwd = decrypt_rsa_password(user_info.password)
+        if pwd != params.old_pwd:
+            raise ValueError(CodeEnum.OLD_PASSWORD_ERROR.msg)
+        if params.new_pwd == params.old_pwd:
+            raise ValueError(CodeEnum.NEW_PWD_NO_OLD_PWD_EQUAL.msg)
+        new_pwd = encrypt_rsa_password(params.new_pwd)
+        await User.create_or_update(
+            {
+                "id": params.id,
+                "password": new_pwd,
+            }
         )

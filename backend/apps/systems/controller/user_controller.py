@@ -10,9 +10,10 @@ from fastapi import APIRouter
 from sqlalchemy.dialects.postgresql.psycopg import logger
 from starlette.requests import Request
 
+from apps.systems.model.RoleModel import UserIn
 from common.enum.code_enum import CodeEnum
 from common.response.http_response import parter_success
-from apps.systems.model.UserModel import User, UserLogin
+from apps.systems.model.UserModel import User, UserLogin, UserQuery, UserResetPwd
 from apps.systems.service.UsersService import UsersService
 from common.utils.local import g
 
@@ -47,6 +48,21 @@ async def user_get_user_info(request:Request):
         raise CodeEnum.FAILURE_CODE_401("鉴权失败")
     user_info = await UsersService.get_userInfo_by_token(token)
     return parter_success(user_info)
+
+@router.post("/list",description="用户列表")
+async def user_list(request: UserQuery):
+    data = await UsersService.list(request)
+    return parter_success(data)
+
+@router.post("/saveOrUpdate",description="更新保存用户")
+async def user_save(request: UserIn):
+    await UsersService.save_or_update(request)
+    return parter_success()
+
+@router.post("/resetPassword",description="重置密码")
+async def user_reset_password(request: UserResetPwd):
+    await UsersService.reset_password(request)
+    return parter_success()
 
 
 @router.get("/demo")
