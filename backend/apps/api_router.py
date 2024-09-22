@@ -4,7 +4,7 @@
 # @FileName  :api_router.py
 # @Time      :2024/9/19 21:05
 # @Author    :XiaoQi
-from apps.project.controller import ProjectController
+from apps.project.controller import projectController
 from apps.systems.controller import userController,menuController,roleController
 from fastapi import APIRouter
 
@@ -12,7 +12,7 @@ api_router = APIRouter()
 
 
 # project
-api_router.include_router(ProjectController.router, prefix="/project", tags=["project"])
+api_router.include_router(projectController.router, prefix="/project", tags=["project"])
 
 # systems
 api_router.include_router(userController.router, prefix="/user", tags=["user"])

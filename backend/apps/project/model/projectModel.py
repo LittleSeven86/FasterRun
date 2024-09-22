@@ -1,7 +1,7 @@
 # coding=utf-8
 # !/usr/bin/env python
 # -*- coding:utf-8 -*-
-# @FileName  :ProjectInfoModel.py
+# @FileName  :projectModel.py
 # @Time      :2024/9/10 19:50
 # @Author    :XiaoQi
 
