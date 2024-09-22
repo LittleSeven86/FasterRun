@@ -15,11 +15,12 @@ import bcrypt
 from fastapi import HTTPException
 from loguru import logger
 from starlette.status import HTTP_401_UNAUTHORIZED
+from watchfiles import awatch
 
-from apps.systems.model.UserModel import UserTokenIn, UserLoginRecordIn, UserLogin, UserQuery, UserResetPwd
+from apps.systems.model.UserModel import UserTokenIn, UserLoginRecordIn, UserLogin, UserQuery, UserResetPwd, UserDelete
 from common.enum.code_enum import CodeEnum
 from apps.systems.dao.userDao import User, UserLoginRecord
-from apps.systems.model.RoleModel import UserIn
+from apps.systems.model.UserModel import UserIn
 from common.serialize.serialize import default_serialize
 from common.utils.current_user import current_user
 from common.utils.generate_rsa_key import decrypt_rsa_password, encrypt_rsa_password
@@ -228,3 +229,32 @@ class UsersService:
                 "password": new_pwd,
             }
         )
+
+    @staticmethod
+    async def delete_user(params:UserDelete):
+        """
+        删除用户
+        :param params:
+        :return:
+        """
+        try:
+            return await User.delete(params.id)
+        except Exception as err:
+            logger.error(traceback.format_exc())
+
+    @staticmethod
+    async def check_token(token: str) -> typing.Dict[typing.Text, typing.Any]:
+        """
+        校验token
+        :param token: token
+        :return:
+        """
+        user_info = await redis_pool.redis.get(config.TEST_USER_INFO.format(token))
+        if not user_info:
+            raise ValueError(CodeEnum.PARTNER_CODE_TOKEN_EXPIRED_FAIL.msg)
+
+        user_info = {
+            'id': user_info.get('id', None),
+            'username': user_info.get('username', None)
+        }
+        return user_info

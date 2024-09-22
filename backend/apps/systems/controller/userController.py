@@ -10,10 +10,10 @@ from fastapi import APIRouter
 from sqlalchemy.dialects.postgresql.psycopg import logger
 from starlette.requests import Request
 
-from apps.systems.model.RoleModel import UserIn
+from apps.systems.model.UserModel import UserIn
 from common.enum.code_enum import CodeEnum
 from common.response.http_response import parter_success
-from apps.systems.model.UserModel import User, UserLogin, UserQuery, UserResetPwd
+from apps.systems.model.UserModel import User, UserLogin, UserQuery, UserResetPwd, UserDelete
 from apps.systems.service.UsersService import UsersService
 from common.utils.local import g
 
@@ -64,6 +64,17 @@ async def user_reset_password(request: UserResetPwd):
     await UsersService.reset_password(request)
     return parter_success()
 
+@router.delete("/delete_user",description="删除用户")
+async def user_del(request: UserDelete):
+    data = await UsersService.delete_user(request)
+    return parter_success(data)
+
+
+@router.post('/authorizeToken', description="校验token是否有效")
+async def authorize_token(request: Request):
+    token = request.headers.get("token", None)
+    user_info = await UsersService.check_token(token)
+    return parter_success(user_info)
 
 @router.get("/demo")
 async def demo():
