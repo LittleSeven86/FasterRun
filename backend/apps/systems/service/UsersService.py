@@ -4,6 +4,7 @@
 # @FileName  :UsersService.py
 # @Time      :2024/9/13 21:19
 # @Author    :XiaoQi
+import traceback
 import typing
 import uuid
 from datetime import datetime
@@ -33,7 +34,8 @@ class UsersService:
         :param params:
         :return:
         """
-        Isregister = await User.get_user_by_name(params.name)
+        Isregister = await User.get_user_by_name(params.username)
+        logger.info(Isregister)
         if Isregister:
             return ValueError(CodeEnum.USERNAME_OR_EMAIL_IS_REGISTER.msg)
         user = await  User.create(params.dict())
@@ -115,3 +117,40 @@ class UsersService:
     async def user_login_record(params: UserLoginRecordIn):
         result = await UserLoginRecord.create_or_update(params.dict())
         return result
+
+    @staticmethod
+    async def user_logout():
+        """
+        退登
+        :return:
+        """
+        token = g.request.headers.get("token", None)
+        try:
+            await redis_pool.redis.delete(config.TEST_USER_INFO.format(token))
+        except Exception as err:
+            logger.error(traceback.format_exc())
+
+    @staticmethod
+    async def get_userInfo_by_token(token: str) -> UserTokenIn:
+        """
+        根据token获取用户信息
+        :param token:
+        :return:
+        """
+        token_info = await redis_pool.redis.get(config.TEST_USER_INFO.format(token))
+        if not token_info:
+            raise ValueError(CodeEnum.PARTNER_CODE_TOKEN_EXPIRED_FAIL.msg)
+        user_info = await User.get(token_info.get("id"))
+        if not user_info:
+            raise ValueError(CodeEnum.PARTNER_CODE_TOKEN_EXPIRED_FAIL.msg)
+        return UserTokenIn(
+            id=user_info.id,
+            token=token,
+            avatar=user_info.avatar,
+            username=user_info.username,
+            nickname=user_info.nickname,
+            roles=user_info.roles,
+            tags=user_info.tags,
+            remarks=user_info.remarks,
+            login_time=token_info.get("login_time"),
+        )

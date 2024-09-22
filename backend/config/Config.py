@@ -113,7 +113,7 @@ class Configs(BaseSettings):
     STATIC_DIR: str = 'static'  # 静态文件目录
     GLOBAL_ENCODING: str = 'utf8'  # 全局编码
     CORS_ORIGINS: typing.List[typing.Any] = ["*"]  # 跨域请求
-    WHITE_ROUTER: list = ["/api/user/login", "/api/file"]  # 路由白名单，不需要鉴权
+    WHITE_ROUTER: list = ["/api/user/login", "/api/file","/api/user/register"]  # 路由白名单，不需要鉴权
 
 
 
