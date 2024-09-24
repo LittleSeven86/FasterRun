@@ -6,6 +6,7 @@
 # @Author    :XiaoQi
 from apps.project.controller import projectController
 from apps.systems.controller import userController,menuController,roleController
+from apps.module.controller import moduleController
 from fastapi import APIRouter
 
 api_router = APIRouter()
@@ -18,4 +19,7 @@ api_router.include_router(projectController.router, prefix="/project", tags=["pr
 api_router.include_router(userController.router, prefix="/user", tags=["user"])
 api_router.include_router(menuController.router, prefix="/menu", tags=["menu"])
 api_router.include_router(roleController.router, prefix="/role", tags=["role"])
+
+# module
+api_router.include_router(moduleController.router, prefix="/module", tags=["module"])
 

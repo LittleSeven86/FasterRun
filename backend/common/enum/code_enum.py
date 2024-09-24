@@ -54,6 +54,7 @@ class CodeEnum(Enum):
     # module 模块 14000 - 15000
     MODULE_HAS_CASE_ASSOCIATION = (14000, " 模块有用例关联, 请删除对于模块下的用例")  # 模块有用例关联
     MODULE_NAME_EXIST = (14001, "模块名已存在")  # 模块名以存在
+    MODULE_NOT_EXIST = (14002, "模块不存在")  # 模块名以存在
 
     # case 用例/配置 15000 - 16000
     CASE_NAME_EXIST = (15000, "用例名已存在，请重新命名")
