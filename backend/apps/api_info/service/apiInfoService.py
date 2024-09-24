@@ -9,7 +9,7 @@ import typing
 
 from loguru import logger
 
-from apps.api_info.dao.apiInfoDao import ApiInfo
+from apps.api_info.dao.apiInfoDao import ApiInfoDao
 from apps.api_info.model.apiInfoModel import ApiQuery, ApiInfoIn, ApiId, ApiIds, ApiRunSchema
 from common.exception.BaseException import ParameterError
 from common.utils.current_user import current_user
@@ -23,7 +23,7 @@ class ApiInfoService:
         :param params:
         :return:
         """
-        data = await ApiInfo.get_list(params)
+        data = await ApiInfoDao.get_list(params)
         return data
 
     @staticmethod
@@ -36,7 +36,7 @@ class ApiInfoService:
         if not params.name:
             raise ParameterError("用例名不能为空!")
         # 判断用例名是否重复
-        existing_data = await ApiInfo.get_api_by_name(name=params.name)
+        existing_data = await ApiInfoDao.get_api_by_name(name=params.name)
         mod = None
         # zero = Zero()
         # if params.setup_code:
@@ -47,18 +47,18 @@ class ApiInfoService:
         #     del mod
 
         if params.id:
-            api_info = await ApiInfo.get(params.id)
+            api_info = await ApiInfoDao.get(params.id)
             if not api_info:
                 raise ParameterError("用例不存在!")
             if api_info.name != params.name:
                 if existing_data:
                     raise ParameterError("用例名重复!")
-        data = await ApiInfo.create_or_update(params.dict())
-        return await ApiInfo.get_api_by_id(data.get('id', None))
+        data = await ApiInfoDao.create_or_update(params.dict())
+        return await ApiInfoDao.get_api_by_id(data.get('id', None))
 
     @staticmethod
     async def copy_api(params: ApiId):
-        source_api_info = await ApiInfo.get(params.id, to_dict=True)
+        source_api_info = await ApiInfoDao.get(params.id, to_dict=True)
         if not source_api_info:
             raise ParameterError("用例不存在!")
         source_api_info.pop("id", None)
@@ -75,7 +75,7 @@ class ApiInfoService:
         :return:
         """
         ids = kwargs.get('ids', None)
-        case_list = ApiInfo.get_list(ids=ids).all()
+        case_list = ApiInfoDao.get_list(ids=ids).all()
         for case_info in case_list:
             case_info.case_status = 20 if case_info.case_status == 10 else 10
             case_info.save()
@@ -87,7 +87,7 @@ class ApiInfoService:
         :param id:
         :return:
         """
-        return await ApiInfo.delete(id=id)
+        return await ApiInfoDao.delete(id=id)
 
     @staticmethod
     async def detail(params: ApiId) -> typing.Dict:
@@ -96,7 +96,7 @@ class ApiInfoService:
         :param params:
         :return:
         """
-        api_info = await ApiInfo.get_api_by_id(params.id)
+        api_info = await ApiInfoDao.get_api_by_id(params)
         if not api_info:
             raise ValueError('当前用例不存在！')
         return api_info
@@ -108,7 +108,7 @@ class ApiInfoService:
         :param params:
         :return:
         """
-        api_info_list = await ApiInfo.get_api_by_ids(params)
+        api_info_list = await ApiInfoDao.get_api_by_ids(params)
 
         return api_info_list if api_info_list else []
 
@@ -123,7 +123,7 @@ class ApiInfoService:
                 logger.info('异步执行用例 ~')
                 test_case.async_run_api.apply_async(kwargs=params.dict(), __business_id=params.id)
             else:
-                summary = await ApiInfoService.run(params)  # 初始化校验，避免生成用例是出错
+                summary = await ApiInfoDaoService.run(params)  # 初始化校验，避免生成用例是出错
                 return summary
         else:
             logger.info('批量运行用例 ~')
@@ -142,7 +142,7 @@ class ApiInfoService:
                     logger.info('异步执行用例 ~')
                     test_case.async_run_api.apply_async(kwargs=new_params.dict(), __business_id=params.id)
                 else:
-                    await ApiInfoService.run(new_params)  # 初始化校验，避免生成用例是出错
+                    await ApiInfoDaoService.run(new_params)  # 初始化校验，避免生成用例是出错
 
     @staticmethod
     async def run(params: ApiRunSchema, **kwargs) -> typing.Dict:
@@ -152,7 +152,7 @@ class ApiInfoService:
         :param kwargs:
         :return:
         """
-        case_info = await ApiInfo.get(params.id)
+        case_info = await ApiInfoDao.get(params.id)
         run_params = ApiInfoIn(**default_serialize(case_info), env_id=params.env_id)
         case_info = await HandelRunApiStep().init(run_params)
         runner = ZeroRunner()
@@ -200,7 +200,7 @@ class ApiInfoService:
                 "testcase": testcase.dict(),
             }
             parsed_data = ApiInfoIn.parse_obj(case).dict()
-            case_info = ApiInfo()
+            case_info = ApiInfoDao()
             case_info.update(**parsed_data)
         return len(coll.case_list)
 
@@ -208,7 +208,7 @@ class ApiInfoService:
     async def get_count_by_user():
         """获取用户api数量"""
         user_info = await current_user()
-        count_info = await ApiInfo.get_count_by_user_id(user_info.get("id", None))
+        count_info = await ApiInfoDao.get_count_by_user_id(user_info.get("id", None))
         if not count_info:
             return 0
         if count_info:
@@ -221,7 +221,7 @@ class ApiInfoService:
         :param params:
         :return:
         """
-        api_info = await ApiInfo.get_api_by_id(params.id)
+        api_info = await ApiInfoDao.get_api_by_id(params.id)
         if not api_info:
             raise ValueError('不存在当前接口！')
         line_list = []
