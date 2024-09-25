@@ -76,6 +76,7 @@ class ModuleDao(Base):
             .group_by(cls.id).order_by(text(order_by))
         return await cls.pagination(stmt)
 
+
     @classmethod
     async def get_module_by_project_id(cls, project_id: int):
         """查询项目是否有关联模块"""
