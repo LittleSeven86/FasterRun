@@ -278,9 +278,9 @@ async def parse_pagination(
         page = int(request_json.get('page', config.DEFAULT_PAGE)) if not page else page
         page_size = min(int(request_json.get('pageSize', config.DEFAULT_PER_PAGE)), 1000) if not page_size else page_size
     else:
-        page = g.request.args.get('page', type=int, default=config.DEFAULT_PAGE) if not page else page
-        page_size = min(g.request.args.get('pageSize', type=int, default=config.DEFAULT_PER_PAGE),
-                        1000) if not page_size else page_size
+        page = g.request.query_params('page', type=int, default=config.DEFAULT_PAGE) if not page else page
+        page_size = min(g.request.query_params('pageSize', type=int, default=config.DEFAULT_PER_PAGE),
+                        1000) if not page_size else config.DEFAULT_PER_PAGE
 
     (total,) = (await session.execute(count_query(query))).scalars()
     result = (await session.execute(paginate_query(query, page=page, page_size=page_size))).fetchall()

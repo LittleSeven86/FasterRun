@@ -6,7 +6,7 @@
 # @Author    :XiaoQi
 import typing
 
-from pydantic import Field
+from pydantic import Field, BaseModel
 from common.model.BaseModel import BaseSchema
 
 
