@@ -4,10 +4,13 @@
 # @FileName  :dependencies.py
 # @Time      :2024/9/21 17:30
 # @Author    :XiaoQi
-from fastapi import Request, Security
+from fastapi import Request, Security, HTTPException
 from fastapi.security import APIKeyHeader
 from sqlalchemy.dialects.postgresql.psycopg import logger
+from starlette.status import HTTP_401_UNAUTHORIZED
 
+from common.enum.code_enum import CodeEnum
+from common.response.http_response import parter_success
 from db.redis import redis_pool
 from common.exception.BaseException import AccessTokenFail
 from common.utils.local import g
@@ -27,10 +30,16 @@ class MyAPIKeyHeader(APIKeyHeader):
             return
         token: str = request.headers.get("token")
         if not token:
-            raise AccessTokenFail()
+            raise HTTPException(
+                status_code=HTTP_401_UNAUTHORIZED,
+                detail="Token is missing. Please provide a valid token."
+            )
         user_info = await redis_pool.redis.get(config.TEST_USER_INFO.format(token))
         if not user_info:
-            raise AccessTokenFail()
+            raise HTTPException(
+                status_code=HTTP_401_UNAUTHORIZED,
+                detail="Invalid token or session has expired."
+            )
         # 重置token时间
         await redis_pool.redis.set(config.TEST_USER_INFO.format(token), user_info, config.CACHE_DAY)
         return
