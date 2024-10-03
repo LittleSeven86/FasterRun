@@ -1,9 +1,7 @@
-# coding=utf-8
-# !/usr/bin/env python
-# -*- coding:utf-8 -*-
-# @FileName  :loader.py
-# @Time      :2024/9/28 21:31
-# @Author    :XiaoQi
+# -*- coding: utf-8 -*-
+# @project: zerorunner
+# @author: xiaobai
+# @create time: 2022/9/9 14:53
 import contextlib
 import csv
 import importlib
@@ -16,7 +14,7 @@ from io import StringIO
 
 from loguru import logger
 
-from Runner.exceptions import runnerExceptions
+from Runner import exceptions
 from Runner import builtin
 
 
@@ -47,7 +45,7 @@ def load_csv_file(csv_file: str) -> typing.List[typing.Dict]:
 
     if not os.path.isfile(csv_file):
         # file path not exist
-        raise runnerExceptions.CSVNotFound(csv_file)
+        raise exceptions.CSVNotFound(csv_file)
 
     csv_content_list = []
 
