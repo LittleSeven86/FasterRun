@@ -6,7 +6,7 @@ HttpRunner html report
 
 """
 
-from zerorunner.report.html.result import HtmlTestResult
-from zerorunner.report.html.gen_report import gen_html_report
+from Runner.report.html.result import HtmlTestResult
+from Runner.report.html.gen_report import gen_html_report
 
 __all__ = ["HtmlTestResult", "gen_html_report"]

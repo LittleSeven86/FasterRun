@@ -5,13 +5,13 @@ import time
 import traceback
 
 from loguru import logger
-from zerorunner.models.base import TStepLogType, TStepResultStatusEnum
-from zerorunner.models.result_model import StepResult, UiSessionData
-from zerorunner.models.step_model import TStep, TUiRequest
-from zerorunner.runner import SessionRunner
-from zerorunner.steps.base import IStep
-from zerorunner.ext.zero_driver.keywords.web import WebAction
-from zerorunner.steps.step_result import TStepResult
+from Runner.models.base import TStepLogType, TStepResultStatusEnum
+from Runner.models.result_model import StepResult, UiSessionData
+from Runner.models.step_model import TStep, TUiRequest
+from Runner.runner import SessionRunner
+from Runner.steps.base import IStep
+from Runner.ext.zero_driver.keywords.web import WebAction
+from Runner.steps.step_result import TStepResult
 
 
 def run_ui_request(runner: SessionRunner,

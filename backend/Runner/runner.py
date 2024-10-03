@@ -12,18 +12,18 @@ from unittest import SkipTest
 
 from loguru import logger
 
-from zerorunner import exceptions
-from zerorunner.client import HttpSession
-from zerorunner.exceptions import ValidationFailure
-from zerorunner.ext.zero_driver.driver import ZeroDriver
-from zerorunner.models.base import VariablesMapping, FunctionsMapping
-from zerorunner.models.result_model import StepResult, TestCaseSummary, TestCaseInOut
-from zerorunner.models.step_model import TStep, TConfig
-from zerorunner.parser import parse_data, get_mapping_function, \
+from Runner import exceptions
+from Runner.client import HttpSession
+from Runner.exceptions import ValidationFailure
+from Runner.ext.zero_driver.driver import ZeroDriver
+from Runner.models.base import VariablesMapping, FunctionsMapping
+from Runner.models.result_model import StepResult, TestCaseSummary, TestCaseInOut
+from Runner.models.step_model import TStep, TConfig
+from Runner.parser import parse_data, get_mapping_function, \
     Parser, parse_variables_mapping
-from zerorunner.response import uniform_validator
-from zerorunner.steps.step_result import TStepResult
-from zerorunner.utils import merge_variables
+from Runner.response import uniform_validator
+from Runner.steps.step_result import TStepResult
+from Runner.utils import merge_variables
 
 
 class SessionRunner(object):

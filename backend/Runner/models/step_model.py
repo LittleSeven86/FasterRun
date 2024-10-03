@@ -4,9 +4,9 @@ import typing
 
 from pydantic import BaseModel, Field, root_validator
 
-from zerorunner.models.base import MethodEnum, Url, Headers, Cookies, Verify, VariablesMapping, ParametersMapping, \
+from Runner.models.base import MethodEnum, Url, Headers, Cookies, Verify, VariablesMapping, ParametersMapping, \
     Export, BaseUrl, FunctionsMapping
-from zerorunner.models.base import Name
+from Runner.models.base import Name
 
 
 class TStepBase(BaseModel):
@@ -29,7 +29,7 @@ class ExtractData(BaseModel):
     """提取模型"""
     name: str = Field("", description="提取变量名称")
     path: str = Field("", description="提取路径")
-    continue_extract = Field(False, description="是否继续提取")
+    continue_extract:bool = Field(False, description="是否继续提取")
     continue_index: int = Field(0, description="继续提取下标")
     extract_type: str = Field("", description="提取类型 jmespath jsonpath")
 

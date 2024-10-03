@@ -4,8 +4,8 @@ import typing
 
 from pydantic import BaseModel, Field
 
-from zerorunner.models.base import VariablesMapping, MethodEnum, Url, Headers, Cookies
-from zerorunner.models.step_model import TSqlRequest
+from Runner.models.base import VariablesMapping, MethodEnum, Url, Headers, Cookies
+from Runner.models.step_model import TSqlRequest
 
 
 class RequestStat(BaseModel):

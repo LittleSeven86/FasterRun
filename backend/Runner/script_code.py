@@ -2,9 +2,9 @@
 # @author: xiaobai
 import typing
 
-from zerorunner.models.step_model import TStep
-from zerorunner.response import ResponseObject
-from zerorunner.runner import SessionRunner
+from Runner.models.step_model import TStep
+from Runner.response import ResponseObject
+from Runner.runner import SessionRunner
 
 
 class CustomDict(dict):

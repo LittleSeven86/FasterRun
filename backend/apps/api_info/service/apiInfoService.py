@@ -8,10 +8,17 @@
 import typing
 
 from loguru import logger
+from sqlalchemy.cyextension.collections import Collection
 
-from apps.api_info.dao.apiInfoDao import ApiInfoDao
+from Runner.testcase import ZeroRunner
+from apps.api_case.case_handler import HandelRunApiStep
+from apps.api_info.dao.apiInfoDao import ApiInfoDao, ApiCaseStep
 from apps.api_info.model.apiInfoModel import ApiQuery, ApiInfoIn, ApiId, ApiIds, ApiRunSchema
+from apps.report.service.reportService import ReportService
+from apps.tasks.dao.taskDao import TimedTaskCase
+from celery_worker.tasks import test_case
 from common.exception.BaseException import ParameterError
+from common.serialize.serialize import default_serialize
 from common.utils.current_user import current_user
 
 
@@ -123,7 +130,7 @@ class ApiInfoService:
                 logger.info('异步执行用例 ~')
                 test_case.async_run_api.apply_async(kwargs=params.dict(), __business_id=params.id)
             else:
-                summary = await ApiInfoDaoService.run(params)  # 初始化校验，避免生成用例是出错
+                summary = await ApiInfoService.run(params)  # 初始化校验，避免生成用例是出错
                 return summary
         else:
             logger.info('批量运行用例 ~')
@@ -142,7 +149,7 @@ class ApiInfoService:
                     logger.info('异步执行用例 ~')
                     test_case.async_run_api.apply_async(kwargs=new_params.dict(), __business_id=params.id)
                 else:
-                    await ApiInfoDaoService.run(new_params)  # 初始化校验，避免生成用例是出错
+                    await ApiInfoService.run(new_params)  # 初始化校验，避免生成用例是出错
 
     @staticmethod
     async def run(params: ApiRunSchema, **kwargs) -> typing.Dict:

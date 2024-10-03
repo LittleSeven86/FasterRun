@@ -5,11 +5,11 @@ import time
 
 from loguru import logger
 
-from zerorunner.models.base import TStepResultStatusEnum
-from zerorunner.models.step_model import TStep
-from zerorunner.runner import SessionRunner
-from zerorunner.steps.base import IStep
-from zerorunner.steps.step_result import TStepResult
+from Runner.models.base import TStepResultStatusEnum
+from Runner.models.step_model import TStep
+from Runner.runner import SessionRunner
+from Runner.steps.base import IStep
+from Runner.steps.step_result import TStepResult
 
 
 def run_wait_request(runner: SessionRunner,

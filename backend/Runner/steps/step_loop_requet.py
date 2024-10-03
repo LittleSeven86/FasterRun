@@ -7,13 +7,13 @@ import typing
 
 from loguru import logger
 
-from zerorunner import exceptions
-from zerorunner.models.base import TStepResultStatusEnum, LoopTypeEnum
-from zerorunner.models.step_model import TStep
-from zerorunner.parser import parse_string_to_json
-from zerorunner.runner import SessionRunner
-from zerorunner.steps.base import IStep
-from zerorunner.steps.step_result import TStepResult
+from Runner import exceptions
+from Runner.models.base import TStepResultStatusEnum, LoopTypeEnum
+from Runner.models.step_model import TStep
+from Runner.parser import parse_string_to_json
+from Runner.runner import SessionRunner
+from Runner.steps.base import IStep
+from Runner.steps.step_result import TStepResult
 
 
 def run_loop_request(runner: SessionRunner,

@@ -7,15 +7,13 @@ import uuid
 
 from loguru import logger
 
-from autotest.utils.async_converter import AsyncIOPool
-from zerorunner import exceptions
-from zerorunner.models import step_model
-from zerorunner.models.result_model import TestCaseSummary
-from zerorunner.parser import Parser
-from zerorunner.reports import HtmlTestResult
-from zerorunner.runner import SessionRunner
-from zerorunner.report.stringify import stringify_summary
-from zerorunner.steps.step import Step
+from Runner import exceptions
+from Runner.models import step_model
+from Runner.models.result_model import TestCaseSummary
+from Runner.report.stringify import stringify_summary
+from Runner.reports import HtmlTestResult
+from Runner.runner import SessionRunner
+from Runner.steps.step import Step
 
 
 class ZeroRunner(object):

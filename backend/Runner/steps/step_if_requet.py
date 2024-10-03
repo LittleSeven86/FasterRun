@@ -3,13 +3,13 @@
 
 import time
 import typing
-from zerorunner import exceptions
-from zerorunner.models.base import TStepLogType, TStepResultStatusEnum
-from zerorunner.models.result_model import StepResult
-from zerorunner.models.step_model import TStep, TIFRequest
-from zerorunner.runner import SessionRunner
-from zerorunner.steps.base import IStep
-from zerorunner.steps.step_result import TStepResult
+from Runner import exceptions
+from Runner.models.base import TStepLogType, TStepResultStatusEnum
+from Runner.models.result_model import StepResult
+from Runner.models.step_model import TStep, TIFRequest
+from Runner.runner import SessionRunner
+from Runner.steps.base import IStep
+from Runner.steps.step_result import TStepResult
 
 
 def run_if_request(runner: SessionRunner,

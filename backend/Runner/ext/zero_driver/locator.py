@@ -2,8 +2,8 @@ from time import sleep
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from zerorunner.models.step_model import TUiRequest
-from zerorunner.ext.zero_driver.driver import ZeroDriver
+from Runner.models.step_model import TUiRequest
+from Runner.ext.zero_driver.driver import ZeroDriver
 
 
 def locating(zero_driver: ZeroDriver, step: TUiRequest):

@@ -5,9 +5,9 @@ from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.select import Select
 
-from zerorunner.models.step_model import TUiRequest
-from zerorunner.ext.zero_driver.driver import ZeroDriver
-from zerorunner.ext.zero_driver.locator import locating
+from Runner.models.step_model import TUiRequest
+from Runner.ext.zero_driver.driver import ZeroDriver
+from Runner.ext.zero_driver.locator import locating
 
 
 class Common:

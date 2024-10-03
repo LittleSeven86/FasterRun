@@ -1,6 +1,6 @@
 import platform
 
-from zerorunner import __version__
+from Runner import __version__
 
 
 def get_platform():

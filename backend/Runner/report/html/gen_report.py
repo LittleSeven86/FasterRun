@@ -5,7 +5,7 @@ from datetime import datetime
 from jinja2 import Template
 
 from loguru import logger
-from zerorunner.exceptions import SummaryEmpty
+from Runner.exceptions import SummaryEmpty
 
 
 def gen_html_report(summary, report_template=None, report_dir=None, report_file=None):

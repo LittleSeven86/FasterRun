@@ -9,20 +9,20 @@ from unittest import SkipTest
 import requests
 from loguru import logger
 
-from autotest.utils.local import g
-from zerorunner import exceptions, utils
-from zerorunner.ext.uploader import prepare_upload_step
-from zerorunner.loader import load_script_content
-from zerorunner.models.base import TStepResultStatusEnum, Hooks
-from zerorunner.models.result_model import StepResult
-from zerorunner.models.step_model import TStep
-from zerorunner.models.step_model import VariablesMapping, TRequest, MethodEnum
-from zerorunner.parser import build_url, Parser
-from zerorunner.response import ResponseObject
-from zerorunner.runner import SessionRunner
-from zerorunner.script_code import Zero
-from zerorunner.steps.base import IStep
-from zerorunner.steps.step_result import TStepResult
+from common.utils.local import g
+from Runner import exceptions, utils
+from Runner.ext.uploader import prepare_upload_step
+from Runner.loader import load_script_content
+from Runner.models.base import TStepResultStatusEnum, Hooks
+from Runner.models.result_model import StepResult
+from Runner.models.step_model import TStep
+from Runner.models.step_model import VariablesMapping, TRequest, MethodEnum
+from Runner.parser import build_url, Parser
+from Runner.response import ResponseObject
+from Runner.runner import SessionRunner
+from Runner.script_code import Zero
+from Runner.steps.base import IStep
+from Runner.steps.step_result import TStepResult
 
 
 def call_hooks(

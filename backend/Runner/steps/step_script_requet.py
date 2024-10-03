@@ -4,13 +4,13 @@ import os
 import time
 import uuid
 
-from zerorunner.loader import load_script_content, load_module_functions
-from zerorunner.models.base import TStepLogType, TStepResultStatusEnum
-from zerorunner.models.result_model import StepResult
-from zerorunner.models.step_model import TStep, TScriptRequest
-from zerorunner.runner import SessionRunner
-from zerorunner.steps.base import IStep
-from zerorunner.steps.step_result import TStepResult
+from Runner.loader import load_script_content, load_module_functions
+from Runner.models.base import TStepLogType, TStepResultStatusEnum
+from Runner.models.result_model import StepResult
+from Runner.models.step_model import TStep, TScriptRequest
+from Runner.runner import SessionRunner
+from Runner.steps.base import IStep
+from Runner.steps.step_result import TStepResult
 
 
 def run_script_request(runner: SessionRunner,

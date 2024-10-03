@@ -6,9 +6,9 @@ HttpRunner report
 - html: render html report
 """
 
-from zerorunner.report.summarize import get_platform, aggregate_stat, get_summary
-from zerorunner.report.stringify import stringify_summary
-from zerorunner.report.html import HtmlTestResult, gen_html_report
+from Runner.report.summarize import get_platform, aggregate_stat, get_summary
+from Runner.report.stringify import stringify_summary
+from Runner.report.html import HtmlTestResult, gen_html_report
 
 __all__ = [
     "get_platform",

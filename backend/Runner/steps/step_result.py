@@ -5,9 +5,9 @@ import time
 import traceback
 from datetime import datetime
 
-from zerorunner.models.result_model import StepResult
-from zerorunner.models.step_model import TStep
-from zerorunner.models.base import TStepResultStatusEnum
+from Runner.models.result_model import StepResult
+from Runner.models.step_model import TStep
+from Runner.models.base import TStepResultStatusEnum
 
 
 class TStepResult:

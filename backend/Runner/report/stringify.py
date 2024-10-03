@@ -2,7 +2,7 @@ import json
 import typing
 from base64 import b64encode
 
-from zerorunner.models.result_model import RequestData, ResponseData, StepResult, TestCaseSummary
+from Runner.models.result_model import RequestData, ResponseData, StepResult, TestCaseSummary
 
 try:
     from collections import Iterable

@@ -11,11 +11,11 @@ from jsonpath import jsonpath
 from loguru import logger
 from requests import Response
 
-from zerorunner import exceptions
-from zerorunner.exceptions import ValidationFailure, ParamsError, ExtractFailure
-from zerorunner.models.base import CheckModeEnum, ExtractTypeEnum, VariablesMapping, FunctionsMapping, Validators
-from zerorunner.models.step_model import ExtractData
-from zerorunner.parser import parse_data, parse_string_value, Parser
+from Runner import exceptions
+from Runner.exceptions import ValidationFailure, ParamsError, ExtractFailure
+from Runner.models.base import CheckModeEnum, ExtractTypeEnum, VariablesMapping, FunctionsMapping, Validators
+from Runner.models.step_model import ExtractData
+from Runner.parser import parse_data, parse_string_value, Parser
 
 
 def get_uniform_comparator(comparator: str):

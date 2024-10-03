@@ -2,16 +2,16 @@
 # @author: xiaobai
 import typing
 
-from zerorunner.models.step_model import TStep, TRequest
-from zerorunner.runner import SessionRunner
-from zerorunner.steps.step_api_requet import RunRequestStep, StepRequestValidation, StepRequestExtraction, \
+from Runner.models.step_model import TStep, TRequest
+from Runner.runner import SessionRunner
+from Runner.steps.step_api_requet import RunRequestStep, StepRequestValidation, StepRequestExtraction, \
     RequestWithOptionalArgs
-from zerorunner.steps.step_if_requet import RunIFStep
-from zerorunner.steps.step_loop_requet import RunLoopStep
-from zerorunner.steps.step_script_requet import RunScriptStep
-from zerorunner.steps.step_sql_request import RunSqlStep
-from zerorunner.steps.step_ui_requet import RunUiStep
-from zerorunner.steps.step_wait_requet import RunWaitStep
+from Runner.steps.step_if_requet import RunIFStep
+from Runner.steps.step_loop_requet import RunLoopStep
+from Runner.steps.step_script_requet import RunScriptStep
+from Runner.steps.step_sql_request import RunSqlStep
+from Runner.steps.step_ui_requet import RunUiStep
+from Runner.steps.step_wait_requet import RunWaitStep
 
 
 class Step(object):

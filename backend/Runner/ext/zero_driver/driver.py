@@ -7,10 +7,10 @@ from pydantic import BaseModel, Field
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from zerorunner.exceptions import ParamsError, ValidationFailure
-from zerorunner.models.base import Validators, VariablesMapping, CheckModeEnum
-from zerorunner.models.step_model import ExtractData
-from zerorunner.parser import Parser, parse_string_value
+from Runner.exceptions import ParamsError, ValidationFailure
+from Runner.models.base import Validators, VariablesMapping, CheckModeEnum
+from Runner.models.step_model import ExtractData
+from Runner.parser import Parser, parse_string_value
 
 
 class DriverSetting(BaseModel):
