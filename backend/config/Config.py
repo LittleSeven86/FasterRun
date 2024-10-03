@@ -7,6 +7,7 @@
 import os
 import typing
 from os.path import abspath
+from pathlib import Path
 
 from pydantic.v1 import BaseSettings, AnyUrl
 
@@ -115,7 +116,50 @@ class Configs(BaseSettings):
     CORS_ORIGINS: typing.List[typing.Any] = ["*"]  # 跨域请求
     WHITE_ROUTER: list = ["/api/user/login", "/api/file","/api/user/register"]  # 路由白名单，不需要鉴权
 
+    # celery worker
+    # broker_url: str = Field(..., env="CELERY_BROKER_URL")
+    broker_url: str = "pyamqp://admin:123456@localhost:5672"
+    # result_backend: str = Field(..., env="CELERY_RESULT_BACKEND")
+    task_serializer: str = "pickle"
+    result_serializer: str = "pickle"
+    accept_content: typing.Tuple = ("pickle", "json",)
+    task_protocol: int = 2
+    timezone: str = "Asia/Shanghai"
+    enable_utc: bool = False
+    broker_connection_retry_on_startup: bool = True
+    # 并发工作进程/线程/绿色线程执行任务的数量 默认10
+    worker_concurrency: int = 10
+    # 一次预取多少消息乘以并发进程数 默认4
+    worker_prefetch_multiplier: int = 4
+    # 池工作进程在被新任务替换之前可以执行的最大任务数。默认是没有限制
+    worker_max_tasks_per_child: int = 100
+    # 连接池中可以打开的最大连接数 默认10
+    broker_pool_limit: int = 10
+    # 传递给底层传输的附加选项的字典。设置可见性超时的示例（Redis 和 SQS 传输支持）
+    result_backend_transport_options: typing.Dict[str, typing.Any] = {'visibility_timeout': 3600}
+    worker_cancel_long_running_tasks_on_connection_loss: bool = True
+    include: typing.List[str] = [
+        # 'celery_worker.tasks.test_case',
+        'celery_worker.tasks.common',
+        'celery_worker.tasks.task_run',
+        # 'celery_worker.tasks.ui_case',
+    ]
+    # task_queues = (
+    #     Queue('default', routing_key='default'),
+    #     Queue('ui_case', routing_key='ui_case'),
+    #     Queue('api_case', routing_key='api_case'),
+    # )
 
+    #  job -A your_app worker -Q api_case,ui_case
+
+    TEST_FILES_DIR: str = Path(__file__).parent.joinpath("static", "files").as_posix()
+    PROJECT_ROOT_DIR: str = Path(__file__).parent.as_posix()
+
+    task_run_pool: int = 3
+
+    # job beat
+    # beat_db_uri: str = Field(..., env="CELERY_BEAT_DB_URL")
+    beat_db_uri: str = ""
 
 
     class Config:

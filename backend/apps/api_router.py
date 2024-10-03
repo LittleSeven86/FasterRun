@@ -10,6 +10,7 @@ from apps.module.controller import moduleController
 from apps.api_info.controller import apiController
 from apps.env.controller import sourceController,envController
 from apps.function.controller import funcController
+from apps.tasks.controller import taskController
 from fastapi import APIRouter
 
 api_router = APIRouter()
@@ -33,3 +34,6 @@ api_router.include_router(apiController.router, prefix="/api_info", tags=["api_i
 api_router.include_router(sourceController.router, prefix="/source", tags=["source"])
 api_router.include_router(envController.router, prefix="/env", tags=["env"])
 api_router.include_router(funcController.router, prefix="/func", tags=["func"])
+
+# task
+api_router.include_router(taskController.router, prefix="/task", tags=["task"])
