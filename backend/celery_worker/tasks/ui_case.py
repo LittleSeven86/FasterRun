@@ -5,14 +5,14 @@ from threading import Lock
 
 from loguru import logger
 
-from autotest.models.ui_models import UiCase
-from autotest.schemas.ui.ui_case import UiCaseIn
-from autotest.services.ui.ui_case import UiCaseServer
-from autotest.services.ui.ui_report import UiReportService
+from Runner.ext.zero_driver.driver import DriverSetting, ZeroDriver
+from Runner.runner import SessionRunner
+from Runner.testcase import ZeroRunner
+from apps.ui.dao.uiDao import UiCase
+from apps.ui.model.ui_case import UiCaseIn
+from apps.ui.service.ui_case import UiCaseServer
+from apps.ui.service.ui_report import UiReportService
 from celery_worker.worker import celery
-from zerorunner.ext.zero_driver.driver import DriverSetting, ZeroDriver
-from zerorunner.runner import SessionRunner
-from zerorunner.testcase import ZeroRunner
 
 r_lock = Lock()
 t_lock = Lock()

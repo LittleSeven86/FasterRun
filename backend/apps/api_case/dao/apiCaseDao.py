@@ -1,22 +1,16 @@
-# coding=utf-8
-# !/usr/bin/env python
-# -*- coding:utf-8 -*-
-# @FileName  :apiDao.py
-# @Time      :2024/10/3 09:53
-# @Author    :XiaoQi
 import typing
 
-from sqlalchemy import String, BigInteger, JSON, Integer, select, func, distinct, and_, DateTime, Text
+from sqlalchemy import String, BigInteger, JSON, Integer, select, func, distinct, and_
 from sqlalchemy.orm import mapped_column, aliased
 
 from apps.api_case.model.apiCaseModel import ApiCaseQuery
-from apps.api_info.dao.apiInfoDao import ApiCaseStep
+
 from apps.project.dao.projectDao import ProjectDao
 from apps.systems.dao.userDao import User
 from common.dao.base import Base
 
 
-class ApiCase(Base):
+class ApiCaseDao(Base):
     """测试用例，集合"""
     __tablename__ = 'api_case'
 
@@ -49,7 +43,7 @@ class ApiCase(Base):
         if params.ids:
             q.append(cls.id.in_(params.ids))
         u = aliased(User)
-
+        from apps.api_info.dao.apiInfoDao import ApiCaseStep
         stmt = select(cls.id,
                       cls.name,
                       cls.project_id,

@@ -56,7 +56,7 @@ sync_engine_facttory = sessionmaker(
     autocommit=False,
     expire_on_commit=False,
 )
-
+sync_session = sessionmaker(bind=sync_engine, autoflush=False, autocommit=False, expire_on_commit=False)
 
 def provide_async_session(func):
     """
