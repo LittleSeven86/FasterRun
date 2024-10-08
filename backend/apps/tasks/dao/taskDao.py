@@ -10,7 +10,7 @@
 import datetime as dt
 import typing
 
-from apps.api_info.dao.apiInfoDao import ApiCase
+from apps.api_info.dao.apiInfoDao import ApiCaseDao
 from apps.module.dao.moduleDao import ModuleDao
 from apps.project.dao.projectDao import ProjectDao
 from apps.systems.dao.userDao import User

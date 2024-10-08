@@ -1,10 +1,3 @@
-# coding=utf-8
-# !/usr/bin/env python
-# -*- coding:utf-8 -*-
-# @FileName  :parser.py
-# @Time      :2024/9/28 21:35
-# @Author    :XiaoQi
-
 # -*- coding: utf-8 -*-
 # @project: zerorunner
 # @author: xiaobai
@@ -19,8 +12,8 @@ from json import JSONDecodeError
 
 from loguru import logger
 from Runner import loader, utils, exceptions
-from Runner.model.baseModels import VariablesMapping, FunctionsMapping
-from common.serialize.serialize import default_serialize
+from Runner.models.base import VariablesMapping, FunctionsMapping
+from Runner.utils import default_serialize
 
 absolute_http_url_regexp = re.compile(r"^https?://", re.I)
 
@@ -284,7 +277,7 @@ def get_mapping_function(
 
     elif function_name in ["multipart_encoder", "multipart_content_type"]:
         # extension for upload test
-        from Runner.ext import uploader
+        from zerorunner.ext import uploader
 
         return getattr(uploader, function_name)
 

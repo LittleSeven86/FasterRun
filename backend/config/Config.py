@@ -9,6 +9,7 @@ import typing
 from os.path import abspath
 from pathlib import Path
 
+from pydantic import Field
 from pydantic.v1 import BaseSettings, AnyUrl
 
 project_banner = """
@@ -160,6 +161,16 @@ class Configs(BaseSettings):
     # job beat
     # beat_db_uri: str = Field(..., env="CELERY_BEAT_DB_URL")
     beat_db_uri: str = ""
+
+    # jacoco service
+    # JACOCO_SERVER_URL: str = Field(None, env="JACOCO_SERVER_URL")
+    JACOCO_SERVER_URL: str = ""
+
+    # # gitlab
+    # GITLAB_URL: str = Field(None, env="GITLAB_URL")
+    # GITLAB_TOKEN: str = Field(None, env="GITLAB_TOKEN")
+    # GITLAB_USER: str = Field(None, env="GITLAB_USER_ID")
+    # GITLAB_PASSWORD: str = Field(None, env="GITLAB_PASSWORD")
 
 
     class Config:
