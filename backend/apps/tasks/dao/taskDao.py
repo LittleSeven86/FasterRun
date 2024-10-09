@@ -125,15 +125,15 @@ class TimedTaskCase(Base):
     async def get_by_case(cls, params: TimedTaskCaseQuery):
         stmt = (select(cls.id.label("r_id"),
                        TimedTask.id.label("task_id"),
-                       ApiCase.id.label("id"),
-                       ApiCase.name.label("name"),
-                       ApiCase.remarks.label("remarks"),
-                       ApiCase.creation_date.label("creation_date"),
+                       ApiCaseDao.id.label("id"),
+                       ApiCaseDao.name.label("name"),
+                       ApiCaseDao.remarks.label("remarks"),
+                       ApiCaseDao.creation_date.label("creation_date"),
                        User.nickname.label("created_by_name"),
                        )
         .outerjoin(TimedTask, TimedTask.id == cls.task_id)
-        .outerjoin(ApiCase, ApiCase.id == cls.case_id)
-        .outerjoin(User, User.id == ApiCase.created_by)
+        .outerjoin(ApiCaseDao, ApiCaseDao.id == cls.case_id)
+        .outerjoin(User, User.id == ApiCaseDao.created_by)
         .where(cls.task_id == params.task_id, cls.type == "case", cls.enabled_flag == 1).order_by(
             cls.id.desc()))
         return await cls.get_result(stmt)
@@ -143,16 +143,16 @@ class TimedTaskCase(Base):
         stmt = (select(cls.id.label("r_id"),
                        TimedTask.id.label("id"),
                        func.concat("timed_task_", TimedTask.id).label("relation_id"),
-                       func.concat("case_", ApiCase.id).label("from_relation_id"),
+                       func.concat("case_", ApiCaseDao.id).label("from_relation_id"),
                        func.concat("timed_task_", TimedTask.id).label("to_relation_id"),
                        TimedTask.name.label("name"),
-                       ApiCase.id.label("case_id"),
-                       ApiCase.name.label("case_name"),
-                       ApiCase.remarks.label("remarks"),
+                       ApiCaseDao.id.label("case_id"),
+                       ApiCaseDao.name.label("case_name"),
+                       ApiCaseDao.remarks.label("remarks"),
                        TimedTask.creation_date.label("creation_date"),
                        User.nickname.label("created_by_name")
                        ).outerjoin(TimedTask, TimedTask.id == cls.task_id)
-        .outerjoin(ApiCase, ApiCase.id == cls.case_id)
+        .outerjoin(ApiCaseDao, ApiCaseDao.id == cls.case_id)
         .outerjoin(User, User.id == TimedTask.created_by)
         .where(cls.case_id.in_(ids), cls.type == "case", cls.enabled_flag == 1).order_by(
             cls.id.desc()))
@@ -162,16 +162,16 @@ class TimedTaskCase(Base):
     async def get_relation_by_timed_task_ids(cls, ids: typing.List):
         stmt = (select(func.any_value(cls.id).label("r_id"),
                        func.any_value(TimedTask.id).label("timed_task_id"),
-                       func.any_value(ApiCase.id).label("id"),
-                       func.any_value(ApiCase.name).label("name"),
-                       func.any_value(func.concat("case_", ApiCase.id)).label("relation_id"),
-                       func.any_value(func.concat("case_", ApiCase.id)).label("from_relation_id"),
+                       func.any_value(ApiCaseDao.id).label("id"),
+                       func.any_value(ApiCaseDao.name).label("name"),
+                       func.any_value(func.concat("case_", ApiCaseDao.id)).label("relation_id"),
+                       func.any_value(func.concat("case_", ApiCaseDao.id)).label("from_relation_id"),
                        func.any_value(func.concat("timed_task_", TimedTask.id)).label("to_relation_id"),
-                       func.any_value(ApiCase.creation_date).label("creation_date"),
+                       func.any_value(ApiCaseDao.creation_date).label("creation_date"),
                        func.any_value(User.nickname).label("created_by_name"),
                        )
                 .outerjoin(TimedTask, TimedTask.id == cls.task_id)
-                .outerjoin(ApiCase, ApiCase.id == cls.case_id)
+                .outerjoin(ApiCaseDao, ApiCaseDao.id == cls.case_id)
                 .outerjoin(User, User.id == TimedTask.created_by)
                 .where(cls.task_id.in_(ids), cls.type == "case", cls.enabled_flag == 1)
                 .order_by(cls.id.desc()))

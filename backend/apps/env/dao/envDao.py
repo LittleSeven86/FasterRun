@@ -10,6 +10,7 @@ from sqlalchemy.orm import mapped_column, aliased
 
 from apps.env.dao.dataSourceDao import DataSourceDao
 from apps.env.model.envModel import EnvQuery, BindingDataSourceIn, BindingFuncIn
+from apps.function.dao.functionDao import Functions
 from apps.systems.dao.userDao import User
 from common.dao.base import Base
 
@@ -116,7 +117,7 @@ class EnvFunc(Base):
         return await cls.execute(stmt)
 
     @classmethod
-    async def get_by_env_id(cls, env_id: int, Functions=None):
+    async def get_by_env_id(cls, env_id: int):
         q = [cls.enabled_flag == 1, cls.env_id == env_id]
         stmt = select(cls.get_table_columns(),
                       cls.env_id.label("env_id"),

@@ -7,7 +7,6 @@
 import typing
 
 from pydantic import Field,BaseModel
-from pydantic.v1 import BaseModel
 
 from common.model.BaseModel import BaseSchema
 

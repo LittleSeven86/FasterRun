@@ -37,7 +37,7 @@ async def get_all_module():
     return parter_success(data)
 
 
-@router.put('/saveOrUpdate', description="更新保存项目")
+@router.post('/saveOrUpdate', description="更新保存项目")
 async def save_or_update(params: ModuleIn):
     data = await ModuleService.save_or_update(params)
     return parter_success(data)

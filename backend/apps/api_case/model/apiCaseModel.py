@@ -6,11 +6,10 @@
 # @Author    :XiaoQi
 import typing
 
-from pydantic.v1 import root_validator
 
 from apps.api_info.model.apiInfoModel import ApiInfoIn
 from common.model.BaseModel import BaseModel
-from pydantic import Field
+from pydantic import Field, root_validator
 from common.model.StepDataModel import TStepData, ApiBaseModel
 
 

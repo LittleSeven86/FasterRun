@@ -5,8 +5,7 @@
 # @Time      :2024/9/10 19:44
 # @Author    :XiaoQi
 
-from pydantic import BaseModel
-from pydantic.v1 import validator
+from pydantic import BaseModel, validator
 
 
 class BaseSchema(BaseModel):

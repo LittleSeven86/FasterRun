@@ -4,7 +4,7 @@
 # @FileName  :projectService.py
 # @Time      :2024/9/10 19:55
 # @Author    :XiaoQi
-
+from apps.module.dao.moduleDao import ModuleDao
 from apps.project.model.projectModel import *
 from apps.project.dao.projectDao import *
 from common.enum.code_enum import CodeEnum
@@ -57,7 +57,7 @@ class ProjectService:
         :param params:
         :return:
         """
-        relation_module = await ModuleInfo.get_module_by_project_id(params.id)
+        relation_module = await ModuleDao.get_module_by_project_id(params.id)
         if relation_module:
             raise ParameterError(CodeEnum.PROJECT_HAS_MODULE_ASSOCIATION)
         return await ProjectDao.delete(params.id)
@@ -65,7 +65,7 @@ class ProjectService:
     @staticmethod
     async def get_project_tree() -> typing.List:
         project_list = await ProjectDao.get_all()
-        module_list = await ModuleInfo.get_all()
+        module_list = await ModuleDao.get_all()
 
         project_tree_list = []
 

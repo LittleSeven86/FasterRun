@@ -90,7 +90,7 @@ def receiver_task_pre_run(task: Task, *args, **kwargs):
         WorkerPool.run(TaskRecordServer.save_or_update(params))
         logger.info(f"异步任务提交--> task id [{task.request.id}]")
     except:
-        logger.error(f"t异步任务提交--> 错误 error:\n{traceback.format_exc()}")
+        logger.error(f"异步任务提交--> 错误 error:\n{traceback.format_exc()}")
 
 
 @setup_logging.connect

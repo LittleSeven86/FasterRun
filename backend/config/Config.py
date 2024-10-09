@@ -9,8 +9,7 @@ import typing
 from os.path import abspath
 from pathlib import Path
 
-from pydantic import Field
-from pydantic.v1 import BaseSettings, AnyUrl
+from pydantic import Field, BaseSettings, AnyUrl
 
 project_banner = """
 ,------.               ,--.                ,------.                  
@@ -140,10 +139,10 @@ class Configs(BaseSettings):
     result_backend_transport_options: typing.Dict[str, typing.Any] = {'visibility_timeout': 3600}
     worker_cancel_long_running_tasks_on_connection_loss: bool = True
     include: typing.List[str] = [
-        # 'celery_worker.tasks.test_case',
+        'celery_worker.tasks.test_case',
         'celery_worker.tasks.common',
         'celery_worker.tasks.task_run',
-        # 'celery_worker.tasks.ui_case',
+        'celery_worker.tasks.ui_case',
     ]
     # task_queues = (
     #     Queue('default', routing_key='default'),

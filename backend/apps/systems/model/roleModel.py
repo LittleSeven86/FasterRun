@@ -6,11 +6,10 @@
 # @Author    :XiaoQi
 import typing
 
-from pydantic.v1 import root_validator
 
 from common.model.BaseModel import BaseModel
 
-from pydantic import Field
+from pydantic import Field, root_validator
 
 
 class RoleIn(BaseModel):

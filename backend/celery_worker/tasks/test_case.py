@@ -8,8 +8,9 @@ from threading import Lock
 from loguru import logger
 from pydantic import BaseModel
 
-from apps import api_info
+from apps.api_info.service import apiInfoService
 from apps.api_case.case_handler import HandelTestCase
+from apps.api_case.dao.apiCaseDao import ApiCaseDao
 from apps.api_case.model.apiCaseModel import TestCaseRun
 from apps.api_case.service.apiService import ApiCaseService
 from apps.api_info.model.apiInfoModel import ApiRunSchema
@@ -48,7 +49,7 @@ async def async_run_api(**kwargs: typing.Any):
     """
     params = ApiRunSchema(**kwargs)
     logger.info("start run api")
-    await api_info.ApiInfoService.run(params)
+    await apiInfoService.ApiInfoService.run(params)
 
 
 @celery.task

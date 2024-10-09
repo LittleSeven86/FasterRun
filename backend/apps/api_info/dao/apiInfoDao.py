@@ -335,22 +335,22 @@ class ApiCaseStep(Base):
         q = [cls.enabled_flag == 1]
         stmt = select(
             func.any_value(cls.id.label("case_step_id")),
-            func.any_value(ApiCase.id).label("id"),
-            func.any_value(ApiCase.name).label("name"),
-            func.any_value(func.concat('case_', ApiCase.id)).label("relation_id"),
+            func.any_value(ApiCaseDao.id).label("id"),
+            func.any_value(ApiCaseDao.name).label("name"),
+            func.any_value(func.concat('case_', ApiCaseDao.id)).label("relation_id"),
             func.any_value(func.concat('api_', api_id)).label("from_relation_id"),
-            func.any_value(func.concat('case_', ApiCase.id)).label("to_relation_id"),
+            func.any_value(func.concat('case_', ApiCaseDao.id)).label("to_relation_id"),
             func.any_value(User.nickname).label("created_by_name"),
-            ApiCase.creation_date,
+            ApiCaseDao.creation_date,
         ) \
-            .join(ApiCase, and_(cls.case_id == ApiCase.id,
-                                cls.version == ApiCase.version,
-                                ApiCase.enabled_flag == 1
+            .join(ApiCaseDao, and_(cls.case_id == ApiCaseDao.id,
+                                cls.version == ApiCaseDao.version,
+                                ApiCaseDao.enabled_flag == 1
                                 )) \
-            .outerjoin(User, User.id == ApiCase.created_by) \
+            .outerjoin(User, User.id == ApiCaseDao.created_by) \
             .where(*q, cls.source_id == api_id) \
-            .group_by(ApiCase.id) \
-            .order_by(ApiCase.id.desc())
+            .group_by(ApiCaseDao.id) \
+            .order_by(ApiCaseDao.id.desc())
         return await cls.get_result(stmt)
 
     @classmethod
@@ -362,17 +362,17 @@ class ApiCaseStep(Base):
             func.any_value(ApiInfoDao.id).label("id"),
             func.any_value(func.concat('api_', ApiInfoDao.id)).label("relation_id"),
             func.any_value(func.concat('api_', ApiInfoDao.id)).label("from_relation_id"),
-            func.any_value(func.concat('case_', ApiCase.id)).label("to_relation_id"),
+            func.any_value(func.concat('case_', ApiCaseDao.id)).label("to_relation_id"),
             func.any_value(ApiInfoDao.name).label("name"),
             func.any_value(ApiInfoDao.creation_date).label("creation_date"),
             func.any_value(User.nickname).label("created_by_name"),
-            func.any_value(ApiCase.creation_date),
+            func.any_value(ApiCaseDao.creation_date),
         ) \
-            .join(ApiCase, and_(cls.case_id == ApiCase.id,
-                                cls.version == ApiCase.version,
-                                ApiCase.enabled_flag == 1
+            .join(ApiCaseDao, and_(cls.case_id == ApiCaseDao.id,
+                                cls.version == ApiCaseDao.version,
+                                ApiCaseDao.enabled_flag == 1
                                 )) \
-            .outerjoin(User, User.id == ApiCase.created_by) \
+            .outerjoin(User, User.id == ApiCaseDao.created_by) \
             .outerjoin(ApiInfoDao, ApiInfoDao.id == cls.source_id) \
             .where(*q, cls.case_id.in_(case_ids), cls.step_type == 'api')
         return await cls.get_result(stmt)

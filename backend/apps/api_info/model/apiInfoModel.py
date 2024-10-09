@@ -6,16 +6,16 @@
 # @Author    :XiaoQi
 import typing
 
-from pydantic.v1 import root_validator
-from pydantic import Field
+
+from pydantic import BaseModel, validator, Field, root_validator
 
 from common.enum.baseEnum import MethodEnum
-from common.model.BaseModel import BaseModel
+from common.model.BaseModel import BaseSchema
 from common.model.StepDataModel import TRequestData, TStepData, ApiBaseModel
 from common.model.StepModel import ExtractData
 
 
-class ApiQuery(BaseModel):
+class ApiQuery(BaseSchema):
     """查询参数序列化"""
 
     id: int = Field(None, description="id")

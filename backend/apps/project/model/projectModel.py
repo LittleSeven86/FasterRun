@@ -7,6 +7,7 @@
 
 import  typing
 
+from pkg_resources import require
 from setuptools.command.alias import alias
 
 from common.model.BaseModel import BaseModel
