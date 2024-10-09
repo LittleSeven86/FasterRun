@@ -147,36 +147,28 @@ class TScriptRequest(BaseModel):
 
 TStepRequest = typing.Union[TRequest, TSqlRequest, TIFRequest, TWaitRequest, TScriptRequest, TLoopRequest, TUiRequest]
 
+from typing import Optional
+
 
 class TStep(TStepBase):
     """步骤模型"""
     testcase: typing.Union[str, typing.Callable, None] = Field(None, description="测试用例")
     variables: VariablesMapping = Field({}, description="步骤变量")
-    # pre_steps: "TStep" = Field([], description="前置步骤")
-    # post_steps: "TStep" = Field([], description="后置步骤")
-    # parameters 加入步骤 参数
     parameters: ParametersMapping = Field({}, description="步骤参数")
     setup_hooks: typing.List[typing.Union[str, dict, object]] = Field([], description="前置钩子")
     teardown_hooks: typing.List[typing.Union[str, dict, object]] = Field([], description="后置钩子")
-    setup_code: str = Field(None, description="前置code")
-    teardown_code: str = Field(None, description="后置code")
-    # used to extract request's response field
+    setup_code: Optional[str] = Field(None, description="前置code")  # 允许 None
+    teardown_code: Optional[str] = Field(None, description="后置code")  # 允许 None
     extracts: typing.List[ExtractData] = Field([], description="提取")
-    # used to export session variables from referenced testcase
     export: Export = Field([], description="导出")
     validators: typing.List[ValidatorData] = Field([], alias="validate")
-    request: TStepRequest = Field(None, description="请求信息", discriminator="request_type_")
+    request: Optional[TStepRequest] = Field(None, description="请求信息", discriminator="request_type_")
     children_steps: typing.List['TStep'] = Field([], description="子步骤")
 
-    @root_validator(pre=True)
-    def insert_request_type(cls, values):
-        request = values.get('request', {})
-        step_type = values.get('step_type', None)
-        if request:
-            if not step_type:
-                raise ValueError("step_type is required")
-            values['request'] = {'request_type_': step_type} | request
-        return values
+    source_id: Optional[typing.Union[str, int]] = Field(None, description="来源ID")  # 允许 None 和 str/int
+    case_id: Optional[typing.Union[str, int]] = Field(None, description="用例ID")  # 允许 None 和 str/int
+    step_id: Optional[int] = Field(None, description="步骤ID")  # 允许 None 和 int
+    parent_step_id: Optional[int] = Field(None, description="父步骤ID")  # 允许 None 和 int
 
 
 class TConfig(BaseModel):

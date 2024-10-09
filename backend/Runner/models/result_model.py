@@ -117,27 +117,29 @@ class TestCaseInOut(BaseModel):
     export_vars: typing.Dict = Field({}, description="导出参数")
 
 
+from typing import Optional, Union
+
 class TestCaseSummary(BaseModel):
     """用例汇总数据"""
     name: str = Field(..., description="报告名称")
     success: bool = Field(..., description="是否成功")
-    case_id: typing.Union[str, int] = Field(None, description="用例id")
-    source_id: typing.Union[str, int] = Field(None, description="来源id")
-    start_time: typing.Union[float, str] = Field(0, description="开始时间")
+    case_id: Optional[Union[str, int]] = Field(None, description="用例id")  # 允许为 None
+    source_id: Optional[Union[str, int]] = Field(None, description="来源id")  # 允许为 None
+    start_time: Union[float, str] = Field(0, description="开始时间")
     response_time: float = Field(0, description="请求时间")
     duration: float = Field(0, description="耗时")
     run_count: int = Field(0, description="运行数量")
     actual_run_count: int = Field(0, description="实际执行数量")
     run_success_count: int = Field(0, description="运行成功数")
-    run_fail_count: int = Field(0, description="运行错误数")
+    run_fail_count: int = Field(0, description="运行失败数")
     run_skip_count: int = Field(0, description="运行跳过数")
     run_err_count: int = Field(0, description="运行错误数")
     start_time_iso_format: str = Field("", description="运行时间系统时间")
     in_out: TestCaseInOut = Field({}, description="输出")
-    # message 记录错误信息
     message: str = Field("", description="信息")
     log: str = Field("", description="日志")
     step_results: typing.List[StepResult] = Field([], description="步骤结果")
+
 
 
 class PlatformInfo(BaseModel):

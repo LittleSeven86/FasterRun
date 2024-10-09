@@ -9,7 +9,7 @@ import typing
 
 from apps.api_info.model.apiInfoModel import ApiInfoIn
 from common.model.BaseModel import BaseModel
-from pydantic import Field, root_validator
+from pydantic import Field, root_validator, field_validator
 from common.model.StepDataModel import TStepData, ApiBaseModel
 
 
@@ -44,7 +44,7 @@ class ApiCaseListSchema(BaseModel):
     config_id: int = Field(None, description="")
     run_status: str = Field(None, description="")
 
-    @root_validator
+    @field_validator("*")
     def root_validator(cls, data):
         if 'include' in data:
             data['include'] = list(map(int, data['include'].split(','))) if data['include'] else []

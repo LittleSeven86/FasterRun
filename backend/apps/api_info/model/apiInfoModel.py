@@ -5,7 +5,7 @@
 # @Time      :2024/9/23 21:15
 # @Author    :XiaoQi
 import typing
-
+from typing import Optional
 
 from pydantic import BaseModel, validator, Field, root_validator
 
@@ -54,11 +54,11 @@ class ApiRunSchema(BaseModel):
 
     id: int = Field(None, description="id")
     ids: typing.List[int] = Field(None, description="ids")
-    env_id: str = Field(None, description="环境id")
-    name: str = Field(None, description="名称")
+    env_id: typing.Union[str,int] = Field(None, description="环境id")
+    name: typing.Optional[str] = Field(None, description="名称")
     run_type: str = Field("api", description="运行模式")
     run_mode: int = Field(None, description="运行类型 10 同步， 20 异步, 30定时任务")
-    number_of_run: int = Field(None, description="运行次数")
+    number_of_run: typing.Optional[int] = Field(None, description="运行次数")
     exec_user_id: int = Field(None, description="执行人id")
     exec_user_name: str = Field(None, description="执行人")
     api_run_mode: str = Field(None, description="api运行模式  one 单个， batch 批量")
@@ -128,9 +128,9 @@ class ApiInfoIn(TStepData):
     id: int = Field(None, description="")
     project_id: int = Field(None, description="")
     module_id: int = Field(None, description="")
-    status: int = Field(None, description="")
+    status: Optional[str] = Field(None, description="")
     env_id: int = Field(None, description="")
-    code_id: int = Field(None, description="")
+    code_id: Optional[int] = Field(None, description="")
     code: str = Field(None, description="")
     priority: int = Field(None, description="")
     method: str = Field(None, description="")

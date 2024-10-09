@@ -3,7 +3,7 @@ from fastapi import FastAPI, Depends
 import uvicorn
 import click
 from loguru import logger
-from config.Config import Configs, config
+from config.Config import config
 from config.dependencies import login_verification
 from init.init_cors import init_cors  # 这个需要直接调用来添加中间件
 from init.init_logger import init_logger

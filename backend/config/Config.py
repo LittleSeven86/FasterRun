@@ -9,7 +9,8 @@ import typing
 from os.path import abspath
 from pathlib import Path
 
-from pydantic import Field, BaseSettings, AnyUrl
+from pydantic import Field
+from pydantic.v1 import BaseSettings, AnyUrl
 
 project_banner = """
 ,------.               ,--.                ,------.                  
