@@ -18,6 +18,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 from watchfiles import awatch
 
 from apps.systems.dao.menuDao import Menu
+from apps.systems.dao.roleDao import Roles
 from apps.systems.model.UserModel import UserTokenIn, UserLoginRecordIn, UserLogin, UserQuery, UserResetPwd, UserDelete
 from apps.systems.service.menuService import MenuService
 from common.enum.code_enum import CodeEnum

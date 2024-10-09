@@ -39,7 +39,7 @@ class UserQuery(BaseModel):
     user_ids: typing.List[int] = Field(None, description='用户id')
 
     class Config:
-        orm_mode = True  # 是否使用orm模型(个人理解: 放行,不验证)
+        from_attributes = True  # 是否使用orm模型(个人理解: 放行,不验证)
 
 
 class UserLogin(BaseModel):

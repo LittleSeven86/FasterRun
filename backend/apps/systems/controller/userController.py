@@ -36,6 +36,16 @@ async def user_logout():
     await UsersService.user_logout()
     return parter_success()
 
+@router.post('/getUserInfoByToken', description="通过token获取用户信息")
+async def get_user_info(request: Request):
+    """
+    根据token获取用户信息
+    :return:
+    """
+    token = request.headers.get("token", None)
+    user_info = await UsersService.get_user_info_by_token(token)
+    return parter_success(user_info)
+
 @router.post("/get_userInfo",description="获取用户信息")
 async def user_get_user_info(request:Request):
     """
@@ -74,6 +84,11 @@ async def user_del(request: UserDelete):
 async def authorize_token(request: Request):
     token = request.headers.get("token", None)
     user_info = await UsersService.check_token(token)
+    return parter_success(user_info)
+
+@router.post('/getMenuByToken', description="根据token获取菜单数据")
+async def get_menu_by_token():
+    user_info = await UsersService.get_menu_by_token(g.token)
     return parter_success(user_info)
 
 @router.get("/demo")
